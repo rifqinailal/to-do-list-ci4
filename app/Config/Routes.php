@@ -6,11 +6,14 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
- //route web
+//route web
 
- $routes->group('', function ($routes) {
-$routes->get('/', 'Home::index');
-$routes->get('index','Web\TasksController::index');
+$routes->group('', function ($routes) {
+    $routes->get('/', 'Home::index');
+    $routes->get('index', 'Web\TasksController::index');
+    $routes->post('create', 'Web\TasksController::create');
+    $routes->get('detail/(:num)', 'Web\TasksController::detail/$1');
+    $routes->post('delete/(:num)', 'Web\TasksController::delete/$1');
 });
 
 

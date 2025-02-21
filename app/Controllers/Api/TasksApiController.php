@@ -19,13 +19,23 @@ class TasksApiController extends ResourceController
         return $this->respond($data, 200);
     }
 
+    public function detail($id)
+    {
+        $data = $this->model->find($id);
+
+        if (empty($data)) {
+            return $this->failNotFound('Task tidak ditemukan');
+        }
+
+        return $this->respond($data);
+    }
     public function create()
     {
 
         $rules = $this->validate([
             'title' => 'required',
             'description' => 'required',
-            'status' => 'required'
+            'deadline' => 'required|valid_date[Y-m-d]'
         ]);
 
         if (!$rules) {
@@ -39,7 +49,7 @@ class TasksApiController extends ResourceController
         $this->model->insert([
             'title' => esc($this->request->getVar('title')),
             'description' => esc($this->request->getVar('description')),
-            'status' => esc($this->request->getVar('status'))
+            'deadline' => $this->request->getVar('deadline')
         ]);
 
         $respond = [
@@ -54,7 +64,8 @@ class TasksApiController extends ResourceController
         $rules = $this->validate([
             'title' => 'required',
             'description' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'deadline' => 'required|valid_date[Y-m-d]'
         ]);
 
         if (!$rules) {
@@ -65,10 +76,11 @@ class TasksApiController extends ResourceController
             return $this->failValidationErrors($response);
         }
 
-        $this->model->update($id,[
+        $this->model->update($id, [
             'title' => esc($this->request->getVar('title')),
             'description' => esc($this->request->getVar('description')),
-            'status' => esc($this->request->getVar('status'))
+            'status' => esc($this->request->getVar('status')),
+            'deadline' => $this->request->getVar('deadline')
         ]);
 
         $respond = [
@@ -78,12 +90,14 @@ class TasksApiController extends ResourceController
         return $this->respond($respond);
     }
 
-    public function delete($id = null){
-        $data = [
-            'message' => 'sucsess',
-            'data_tasks' => $this->model->delete($id)
+    public function delete($id = null)
+    {
+        $this->model->delete($id);
+
+        $response = [
+            'message' => 'Data berhasil dihapus'
         ];
 
-        return $this->respondDeleted($data);
+        return $this->respondDeleted($response);
     }
 }

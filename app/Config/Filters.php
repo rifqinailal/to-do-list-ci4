@@ -69,11 +69,14 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
+            'cors',
+            'csrf' => ['except' => ['api/*']]
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
         ],
         'after' => [
+            'cors'
             // 'honeypot',
             // 'secureheaders',
         ],
@@ -92,7 +95,9 @@ class Filters extends BaseFilters
      *
      * @var array<string, list<string>>
      */
-    public array $methods = [];
+    public array $methods = [
+        
+    ];
 
     /**
      * List of filter aliases that should run on any
